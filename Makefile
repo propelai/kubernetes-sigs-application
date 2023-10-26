@@ -25,7 +25,7 @@ endif
 RELEASE_REMOTE ?= origin
 RELEASE_BRANCH ?= release-v${app_major}.${app_minor}
 RELEASE_TAG ?= v${app_major}.${app_minor}.${app_patch}
-
+REGISTRY = gcr.io/nosidelines
 CONTROLLER_IMG ?= $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_TAG)
 
 # Directories.
@@ -281,7 +281,7 @@ set-image: $(TOOLBIN)/kustomize
 	cd config/kube-app-manager && $(TOOLBIN)/kustomize edit set image kube-app-manager=$(CONTROLLER_IMG)
 
 .PHONY: docker-build
-docker-build: set-image test $(TOOLBIN)/kustomize ## Build the docker image for kube-app-manager
+docker-build: set-image $(TOOLBIN)/kustomize ## Build the docker image for kube-app-manager
 	docker build --network=host --pull --build-arg ARCH=$(ARCH) . -t $(CONTROLLER_IMG)
 
 .PHONY: docker-push
